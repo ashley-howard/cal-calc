@@ -51,17 +51,20 @@ button {
 
     <h2>Consumed calories</h2>
     <p id="output"></p>
+    <p id="per-person"></p>
 
     <script>
-    const submit = document.getElementById("submit")
+const submit = document.getElementById("submit")
 const grams = document.getElementById("grams")
 const calories = document.getElementById("calories")
 const consumed = document.getElementById("consumed")
 const output = document.getElementById("output")
+const perPerson = document.getElementById("per-person")
 
 submit.onclick = function(){
     console.log(Math.trunc(+consumed.value / +grams.value * +calories.value))
     output.innerText = `${Math.trunc(+consumed.value / +grams.value * +calories.value)}`
+    perPerson.innerText = `(or ${(Math.trunc(+consumed.value / +grams.value * +calories.value)) / 2} between 2 people)`
 };
     </script>
     
