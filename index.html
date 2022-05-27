@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <style>
+        .hidden {
+            display: none;
+        }
+
+        .input-title {
+            font-size: 20px;
+            border: 0;
+            padding-left: 0;
+            padding-right: 0;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+
         fieldset {
             border-bottom: 1px solid #efefef;
             padding-bottom: 5px;
@@ -26,6 +39,7 @@
     <div class="container-sm my-4">
         <form id="form">
             <fieldset id="fieldset-1">
+                <input type="text" class="form-control input-title" id="item-1" aria-describedby="emailHelp" value="Item 1">
                 <h2 class="h6">Recommended</h2>
                 <div class="input-group flex-nowrap mb-3">
                     <input type="number" class="form-control" id="grams-1" aria-describedby="emailHelp" placeholder="500">
@@ -43,6 +57,7 @@
         </form>
 
         <button type="submit" class="btn btn-outline-primary" id="add">Add</button>
+        <button type="submit" class="btn btn-danger hidden" id="remove">Remove</button>
         <button type="submit" class="btn btn-primary" id="submit">Calculate</button>
 
         <div class="container-sm my-4 p-0">
@@ -56,6 +71,7 @@
     <script>
         const form = document.getElementById("form")
         const add = document.getElementById("add")
+        const remove = document.getElementById("remove")
         const submit = document.getElementById("submit")
         const grams = document.getElementById("grams")
         const calories = document.getElementById("calories")
@@ -70,18 +86,32 @@
             const fieldset = document.createElement("fieldset");
             addCount += 1;
             fieldset.id = `fieldset-${addCount}`;
-            fieldset.innerHTML = `<h2 class="h6">Recommended</h2> <div class="input-group flex-nowrap mb-3"> <input type="number" class="form-control" id="grams-${addCount}" aria-describedby="emailHelp" placeholder="500"> <span class="input-group-text" style="margin-right: 15px;">grams</span> <input type="number" class="form-control" id="calories-${addCount}" aria-describedby="emailHelp" placeholder="230"> <span class="input-group-text">calories</span> </div><h2 class="h6">Consumed</h2> <div class="input-group flex-nowrap mb-3" style="max-width: 50%;"> <input type="number" class="form-control" id="consumed-${addCount}" aria-describedby="emailHelp" placeholder="100"> <span class="input-group-text">grams</span> </div>`;
+            fieldset.innerHTML = `<input type="text" class="form-control input-title" id="item-${addCount}" aria-describedby="emailHelp" value="Item ${addCount}"><h2 class="h6">Recommended</h2> <div class="input-group flex-nowrap mb-3"> <input type="number" class="form-control" id="grams-${addCount}" aria-describedby="emailHelp" placeholder="500"> <span class="input-group-text" style="margin-right: 15px;">grams</span> <input type="number" class="form-control" id="calories-${addCount}" aria-describedby="emailHelp" placeholder="230"> <span class="input-group-text">calories</span> </div><h2 class="h6">Consumed</h2> <div class="input-group flex-nowrap mb-3" style="max-width: 50%;"> <input type="number" class="form-control" id="consumed-${addCount}" aria-describedby="emailHelp" placeholder="100"> <span class="input-group-text">grams</span> </div>`;
             form.appendChild(fieldset);
+
+            remove.classList.remove("hidden");
+        }
+        
+        remove.onclick = function(e) {
+            e.preventDefault();
+            form.removeChild(document.getElementById(`fieldset-${document.getElementsByTagName("fieldset").length}`))
+            addCount -= 1;
         }
 
         submit.onclick = function(e){
             e.preventDefault();
             var sum = 0;
-            for (let i = 1; i < (document.getElementsByTagName("fieldset").length + 1); i++) {   
-                sum += Math.trunc(+document.getElementById(`consumed-${[i]}`).value / +document.getElementById(`grams-${[i]}`).value * +document.getElementById(`calories-${[i]}`).value)
+            for (let i = 1; i < (document.getElementsByTagName("fieldset").length + 1); i++) {
+                if (isNaN(Math.trunc(+document.getElementById(`consumed-${[i]}`).value / +document.getElementById(`grams-${[i]}`).value * +document.getElementById(`calories-${[i]}`).value))) {
+                    sum += 0
+                }
+                else {
+                    sum += Math.trunc(+document.getElementById(`consumed-${[i]}`).value / +document.getElementById(`grams-${[i]}`).value * +document.getElementById(`calories-${[i]}`).value)
+                    perPerson.innerText = `(or ${sum / 2} between 2 people)`
+                }
+                
             }
             output.innerText = sum
-            perPerson.innerText = `(or ${sum / 2} between 2 people)`
             sum = 0; 
         };
     </script>
