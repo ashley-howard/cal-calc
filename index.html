@@ -89,13 +89,19 @@
             fieldset.innerHTML = `<input type="text" class="form-control input-title" id="item-${addCount}" aria-describedby="emailHelp" value="Item ${addCount}"><h2 class="h6">Recommended</h2> <div class="input-group flex-nowrap mb-3"> <input type="number" class="form-control" id="grams-${addCount}" aria-describedby="emailHelp" placeholder="500"> <span class="input-group-text" style="margin-right: 15px;">grams</span> <input type="number" class="form-control" id="calories-${addCount}" aria-describedby="emailHelp" placeholder="230"> <span class="input-group-text">calories</span> </div><h2 class="h6">Consumed</h2> <div class="input-group flex-nowrap mb-3" style="max-width: 50%;"> <input type="number" class="form-control" id="consumed-${addCount}" aria-describedby="emailHelp" placeholder="100"> <span class="input-group-text">grams</span> </div>`;
             form.appendChild(fieldset);
 
-            remove.classList.remove("hidden");
+            if (addCount > 1) {
+                remove.classList.remove("hidden");
+            }
         }
         
         remove.onclick = function(e) {
             e.preventDefault();
             form.removeChild(document.getElementById(`fieldset-${document.getElementsByTagName("fieldset").length}`))
             addCount -= 1;
+
+            if (addCount < 2) {
+                remove.classList.add("hidden");
+            }
         }
 
         submit.onclick = function(e){
